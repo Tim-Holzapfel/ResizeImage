@@ -1,83 +1,156 @@
 {
   "tasks": [
+    // SECTION Activate Env
     {
-      "label": "1. Activate Env",
+      "label": "Activate Env",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "clear": false,
+        "echo": false,
+        "focus": false,
+        "panel": "shared",
+        "reveal": "never",
+        "showReuseMessage": false
+      },
       "type": "shell",
       "windows": {
         "command": ".\\.venv\\Scripts\\activate.bat"
-      },
-      "options": { "cwd": "${workspaceFolder}" },
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared",
-        "showReuseMessage": false,
-        "clear": false
       }
     },
+    // !SECTION
+    // SECTION Install Poetry
     {
-      "label": "2. Install Poetry",
-      "type": "shell",
       "command": "poetry install",
-      "dependsOn": ["1. Activate Env"],
+      "dependsOn": [
+        "Activate Env"
+      ],
+      "label": "Install Poetry",
       "presentation": {
+        "clear": false,
         "echo": true,
-        "reveal": "always",
         "focus": false,
         "panel": "shared",
-        "showReuseMessage": false,
-        "clear": false
-      }
+        "reveal": "always",
+        "showReuseMessage": false
+      },
+      "type": "shell"
     },
+    // !SECTION
+    // SECTION Poetry Build
     {
-      "label": "3. Build",
-      "type": "shell",
       "command": "poetry build",
-      "dependsOn": ["2. Install Poetry"],
+      "dependsOn": [
+        "Install Poetry"
+      ],
+      "label": "Build",
       "presentation": {
+        "clear": false,
         "echo": true,
-        "reveal": "always",
         "focus": false,
         "panel": "shared",
-        "showReuseMessage": false,
-        "clear": false
-      }
+        "reveal": "always",
+        "showReuseMessage": false
+      },
+      "type": "shell"
     },
+    // !SECTION
+    // SECTION Deactivate Env
     {
-      "label": "4. Deactivate Env",
-      "type": "shell",
       "command": "exit",
-      "dependsOn": ["3. Build"],
+      "dependsOn": [
+        "Build"
+      ],
+      "label": "Deactivate Env",
       "presentation": {
+        "clear": false,
         "echo": true,
-        "reveal": "always",
         "focus": false,
         "panel": "shared",
-        "showReuseMessage": false,
-        "clear": false
-      }
+        "reveal": "always",
+        "showReuseMessage": false
+      },
+      "type": "shell"
     },
+    // !SECTION
+    // SECTION Install Globally
     {
-      "label": "5. Install Globally",
+      "dependsOn": [
+        "Deactivate Env"
+      ],
+      "group": {
+        "isDefault": true,
+        "kind": "build"
+      },
+      "label": "Install Globally",
+      "presentation": {
+        "clear": true,
+        "echo": true,
+        "focus": false,
+        "panel": "new",
+        "reveal": "always",
+        "showReuseMessage": false
+      },
       "type": "shell",
       "windows": {
         "command": "python -m pip install ${workspaceFolder}/dist/${workspaceFolderBasename}-1.0.0.tar.gz"
-      },
-      "dependsOn": ["4. Deactivate Env"],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
+      }
+    },
+    // !SECTION
+    // SECTION Update Poetry
+    {
+      "command": "poetry update",
+      "dependsOn": [
+        "Activate Env",
+        "Delete Folder"
+      ],
+      "label": "Update Poetry",
       "presentation": {
+        "clear": false,
         "echo": true,
+        "focus": true,
+        "panel": "shared",
         "reveal": "always",
+        "showReuseMessage": false
+      },
+      "type": "shell"
+    },
+    // !SECTION
+    // SECTION Delete Folder
+    {
+      "label": "Delete Folder",
+      "presentation": {
+        "clear": false,
+        "echo": false,
         "focus": false,
-        "panel": "new",
-        "showReuseMessage": false,
-        "clear": true
+        "panel": "shared",
+        "reveal": "never",
+        "showReuseMessage": false
+      },
+      "type": "shell",
+      "windows": {
+        "command": "Remove-Item C:\\Users\\Tim\\AppData\\Local\\pypoetry\\Cache -Force  -Recurse -ErrorAction SilentlyContinue"
+      }
+    },
+    // !SECTION
+    // SECTION Create Folder
+    {
+      "label": "Create Folder",
+      "presentation": {
+        "clear": false,
+        "echo": false,
+        "focus": false,
+        "panel": "shared",
+        "reveal": "never",
+        "showReuseMessage": false
+      },
+      "type": "shell",
+      "windows": {
+        "command": "New-Item -Path C:\\Users\\Tim\\AppData\\Local\\pypoetry\\Cache -ItemType Directory -Force"
       }
     }
+    // !SECTION
   ],
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
